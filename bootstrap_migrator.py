@@ -97,12 +97,14 @@ quick_replacements = {
     "checkbox.inline": "checkbox-inline",
     "radio.inline": "radio-inline",
 }
+replace_split_class = {
+    'btn': ['btn', 'btn-default'],
+    'label': ['label', 'label-default'],
+    'accordion-group': ['panel', 'panel-default'],
+}
 warn_abouts = {
     'inline': 'If this is a radio or checkbox, replace ".inline" with ".checkbox-inline" or ".radio-inline".',
-    'accordion-group': '".accordion-group" should be replace with ".panel.panel-default".',
     'error': 'If this is a ".table.error", replace it with ".table.danger".\n\t".control-group.*" should be replaced with ".form-group.has-*".',
-    'label': '".label" should be replace with ".label.label-default".',
-    'btn': '".btn" should be replace with ".btn.btn-default".',
     'bar-.*?': '"bar-*" should be replaced with ".progress-bar-*".',
     'icon-.*?': '"icon-*" should be replaced with ".glyphicon .glyphicon-*".',
     'span.*?': '"span.*" should be replaced with ".col-md-*".',
@@ -136,10 +138,10 @@ def regex_warn_file(filename, regex, warn):
 replacements = 0
 warnings = []
 file_types = [
-    ('less', [css_class]),
-    ('js', [html_class, selector_class]),
-    ('html', [html_class]),
-    ('py', [html_class, selector_class]),
+    ('less', [(css_class, '.')]),
+    ('js', [(html_class, ' '), (selector_class, '.')]),
+    ('html', [(html_class, ' ')]),
+    ('py', [(html_class, ' '), (selector_class, '.')]),
 ]
 print 'Processing...'
 for type_index, (type_name, regex_groups) in enumerate(file_types):
@@ -148,12 +150,17 @@ for type_index, (type_name, regex_groups) in enumerate(file_types):
 
         # Perform quick replacements.
         for find, replace in quick_replacements.items():
-            for regex in [re.compile(r.format(find)) for rs in regex_groups for r in rs]:
+            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
                 replacements += regex_sub_file(file_name, regex, r'\1' + replace + r'\3')
+
+        # Perform split replacements.
+        for find, replace in replace_split_class.items():
+            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
+                replacements += regex_sub_file(file_name, regex, r'\1' + class_sep.join(replace) + r'\3')
 
         # Check for lines that we can't automatically upgrade and warn about them.
         for find, warn in warn_abouts.items():
-            for regex in [re.compile(r.format(find)) for rs in regex_groups for r in rs]:
+            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
                 warnings +=  regex_warn_file(file_name, regex, warn)
 
         # Update progress bar with our current progress.
