@@ -113,6 +113,23 @@ warn_abouts = {
     'warning': '".control-group.*" should be replaced with ".form-group.has-*".',
     '.hidden-desktop': 'Split into .hidden-md .hidden-lg',
     '.visible-desktop': 'Split into .visible-md .visible-lg',
+    'form-actions': '"Form actions" removed; replaced by "N/A".',
+    'form-search': '"Search form" removed; replaced by "N/A".',
+    'control-group.info': '"Form group with info" removed; replaced by "N/A".',
+    'input-mini .input-small .input-medium.input-large .input-xlarge .input-xxlarge': '"Fixed-width input sizes" removed; replaced by "Use .form-control and the grid systeminstead.".',
+    'input-block-level': '"Block level form input" removed; replaced by "No direct equivalent, but forms controlsare similar.".',
+    'btn-inverse': '"Inverse buttons" removed; replaced by "N/A".',
+    'row-fluid': '"Fluid row" removed; replaced by ".row (no more fixed grid)".',
+    'controls': '"Controls wrapper" removed; replaced by "N/A".',
+    'controls-row': '"Controls row" removed; replaced by ".row or .form-group".',
+    'navbar-inner': '"Navbar inner" removed; replaced by "N/A".',
+    'divider-vertical': '"Navbar vertical dividers" removed; replaced by "N/A".',
+    'dropdown-submenu': '"Dropdown submenu" removed; replaced by "N/A".',
+    'tabs-left .tabs-right .tabs-below': '"Tab alignments" removed; replaced by "N/A".',
+    'pill-content': '"Pill-based tabbable area" removed; replaced by ".tab-content".',
+    'pill-pane': '"Pill-based tabbable area pane" removed; replaced by ".tab-pane".',
+    'nav-header': '"Nav lists" removed; replaced by "No direct equivalent, but list groups and.panel-groups are similar.".',
+    'help-inline': '"Inline help for form controls" removed; replaced by "No exact equivalent, but .help-block is similar.".',
 }
 
 def progress(percent):
