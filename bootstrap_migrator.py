@@ -157,7 +157,8 @@ for type_index, (type_name, regex_groups) in enumerate(file_types):
                 warnings +=  regex_warn_file(file_name, regex, warn)
 
         # Update progress bar with our current progress.
-        progress((float(index) / float(len(files))) * 0.33 + 0.33 * type_index)
+        fraction = 1./float(len(file_types))
+        progress((float(index) / float(len(files))) * fraction + fraction * type_index)
 print '\n    %d replacements made.' % replacements
 print ''
 
