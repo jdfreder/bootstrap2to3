@@ -22,7 +22,6 @@ app_dirs = [
     '~/ipython/IPython/html/static/dateformat',
     '~/ipython/IPython/html/static/notebook',
     '~/ipython/IPython/html/static/services',
-    '~/ipython/IPython/html/static/style',
     '~/ipython/IPython/html/static/tree',
     '~/ipython/IPython/html/static/widgets',
 ]
@@ -37,7 +36,7 @@ import sys
 
 re_html = re.compile('.*\\.html$|.*\\.htm$')
 re_js = re.compile('.*\\.js$')
-re_less = re.compile('.*\\.less$')
+re_less = re.compile('.*\\.less$|.*\\.css$')
 re_py = re.compile('.*\\.py$')
 
 app_dirs = [os.path.expanduser(p) for p in app_dirs]
