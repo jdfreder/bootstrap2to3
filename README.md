@@ -13,5 +13,5 @@ Supports
 
 This script will automatically search your code and make necessary 
 replacements to migrate your codebase to Bootstrap 3.x.  It will create a
-`warnings.txt` file in the cwd with all of the line numbers that you will need 
+`warnings.md` file in the cwd with all of the line numbers that you will need 
 to update by hand along with *helpful* warning messages.

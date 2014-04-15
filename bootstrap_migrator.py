@@ -104,7 +104,7 @@ replace_split_class = {
 }
 warn_abouts = {
     'inline': 'If this is a radio or checkbox, replace ".inline" with ".checkbox-inline" or ".radio-inline".',
-    'error': 'If this is a ".table.error", replace it with ".table.danger".\n\t".control-group.*" should be replaced with ".form-group.has-*".',
+    'error': 'If this is a ".table.error", replace it with ".table.danger".\n       ".control-group.*" should be replaced with ".form-group.has-*".',
     'bar-.*?': '"bar-*" should be replaced with ".progress-bar-*".',
     'icon-.*?': '"icon-*" should be replaced with ".glyphicon .glyphicon-*".',
     'span.*?': '"span.*" should be replaced with ".col-md-*".',
@@ -156,7 +156,7 @@ def regex_warn_file(filename, regex, warn):
     for index, line in enumerate(contents.split('\n')):
         results = regex.findall(line)
         if results and len(results) > 0:
-            warnings.append('%s line #%d: %s' % (filename, (index + 1), warn))
+            warnings.append(' - [ ] %s line %d: %s' % (filename, (index + 1), warn.replace('*', '\\*')))
     return warnings
 
 replacements = 0
@@ -193,6 +193,6 @@ for type_index, (type_name, regex_groups) in enumerate(file_types):
 print '\n    %d replacements made.' % replacements
 print ''
 
-with open('warnings.txt', 'w') as f:
+with open('warnings.md', 'w') as f:
     f.write('\n'.join(warnings))
-print '%d warnings saved to "warnings.txt".' % len(warnings)
+print '%d warnings saved to "warnings.md".' % len(warnings)
