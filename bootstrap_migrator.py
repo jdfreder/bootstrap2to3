@@ -64,6 +64,7 @@ selector_class = ["([\"].*?\\.)({0})([ \\.#:\"])", "('.*?\\.)({0})([ \\.#:'])"]
 
 quick_replacements = {
     "row-fluid": "row",
+    "container-fluid": "container",
     "brand": "navbar-brand",
     "nav-collapse": "navbar-collapse",
     "nav-toggle": "navbar-toggle",
