@@ -3,6 +3,14 @@
 # Coonfiguration
 #-------------------------------------------------------------------------------
 
+# What should be processed for replacements?
+process_css = False
+process_js = False
+process_html = False
+process_py = False
+process_less_css = False
+process_less_variables = True
+
 # Everything but the static/componets directory should be listed.  Algorithm is
 # recursive, no need to list sub directories if search is meant to be all 
 # inclusive.
@@ -36,7 +44,8 @@ import sys
 
 re_html = re.compile('.*\\.html$|.*\\.htm$')
 re_js = re.compile('.*\\.js$')
-re_less = re.compile('.*\\.less$|.*\\.css$')
+re_less = re.compile('.*\\.less$')
+re_css = re.compile('.*\\.css$')
 re_py = re.compile('.*\\.py$')
 
 app_dirs = [os.path.expanduser(p) for p in app_dirs]
@@ -49,7 +58,8 @@ jsfiles = get_files(re_js)
 lessfiles = get_files(re_less)
 pyfiles = get_files(re_py)
 
-css_class = [r"([\.@])({0})([ {{\(\.#:])"]
+css_class = [r"([\.@])({0})([\s{{\(\.#:])"]
+less_class = ['(@)({0})([:;\\)\\s,])']
 html_class = [
     "(\".*? )({0})( .*?\")", 
     "(\".*? )({0})(\")", 
@@ -97,11 +107,13 @@ quick_replacements = {
     "checkbox.inline": "checkbox-inline",
     "radio.inline": "radio-inline",
 }
+
 replace_split_class = {
     'btn': ['btn', 'btn-default'],
     'label': ['label', 'label-default'],
     'accordion-group': ['panel', 'panel-default'],
 }
+
 warn_abouts = {
     'inline': 'If this is a radio or checkbox, replace ".inline" with ".checkbox-inline" or ".radio-inline".',
     'error': 'If this is a ".table.error", replace it with ".table.danger".\n       ".control-group.*" should be replaced with ".form-group.has-*".',
@@ -140,92 +152,92 @@ warn_abouts = {
 }
 
 replace_less = {
-    '@bodyBackground': '@body-bg'
-    '@textColor': '@text-color'
-    '@linkColor': '@link-color'
-    '@linkColorHover': '@link-hover-color'
-    '@blue': '@brand-primary'
-    '@green': '@brand-success'
-    '@red': '@brand-danger'
-    '@orange': '@brand-warning'
-    '@gridColumns': '@grid-columns'
-    '@gridGutterWidth': '@grid-gutter-width'
-    '@sansFontFamily': '@font-family-sans-serif'
-    '@serifFontFamily': '@font-family-serif'
-    '@monoFontFamily': '@font-family-monospace'
-    '@baseFontSize': '@font-size-base'
-    '@baseFontFamily': '@font-family-base'
-    '@baseLineHeight': '@line-height-base'
-    '@headingsFontFamily': '@headings-font-family'
-    '@headingsFontWeight': '@headings-font-weight'
-    '@headingsColor': '@headings-color'
-    '@fontSizeLarge': '@font-size-large'
-    '@fontSizeSmall': '@font-size-small'
-    '@baseBorderRadius': '@border-radius-base'
-    '@borderRadiusLarge': '@border-radius-large'
-    '@borderRadiusSmall': '@border-radius-small'
-    '@tableBackground': '@table-bg'
-    '@tableBackgroundAccent': '@table-bg-accent'
-    '@tableBackgroundHover': '@table-bg-hover'
-    '@placeholderText': '@input-color-placeholder'
-    '@inputBackground': '@input-bg'
-    '@inputBorder': '@input-border'
-    '@inputBorderRadius': '@input-border-radius'
-    '@inputDisabledBackground': '@input-bg-disabled'
-    '@navbarHeight': '@navbar-height'
-    '@navbarBackground': '@navbar-default-bg'
-    '@navbarText': '@navbar-default-color'
-    '@navbarLinkColor': '@navbar-default-link-color'
-    '@navbarLinkColorHover': '@navbar-default-link-hover-color'
-    '@navbarLinkColorActive': '@navbar-default-link-active-color'
-    '@navbarLinkBackgroundHover': '@navbar-default-link-hover-bg'
-    '@navbarLinkBackgroundActive': '@navbar-default-link-active-bg'
-    '@dropdownBackground': '@dropdown-bg'
-    '@dropdownBorder': '@dropdown-border'
-    '@dropdownLinkColor': '@dropdown-link-color'
-    '@dropdownLinkColorHover': '@dropdown-link-hover-color'
-    '@dropdownLinkBackgroundHover': '@dropdown-link-hover-bg'
-    '@paddingLarge': ['@padding-large-vertical' '@padding-large-horizontal']
-    '@paddingSmall': ['@padding-small-vertical' '@padding-small-horizontal']
-    '@paddingMini': ['@padding-xs-vertical' '@padding-xs-horizontal']
+    'bodyBackground': 'body-bg',
+    'textColor': 'text-color',
+    'linkColor': 'link-color',
+    'linkColorHover': 'link-hover-color',
+    'blue': 'brand-primary',
+    'green': 'brand-success',
+    'red': 'brand-danger',
+    'orange': 'brand-warning',
+    'gridColumns': 'grid-columns',
+    'gridGutterWidth': 'grid-gutter-width',
+    'sansFontFamily': 'font-family-sans-serif',
+    'serifFontFamily': 'font-family-serif',
+    'monoFontFamily': 'font-family-monospace',
+    'baseFontSize': 'font-size-base',
+    'baseFontFamily': 'font-family-base',
+    'baseLineHeight': 'line-height-base',
+    'headingsFontFamily': 'headings-font-family',
+    'headingsFontWeight': 'headings-font-weight',
+    'headingsColor': 'headings-color',
+    'fontSizeLarge': 'font-size-large',
+    'fontSizeSmall': 'font-size-small',
+    'baseBorderRadius': 'border-radius-base',
+    'borderRadiusLarge': 'border-radius-large',
+    'borderRadiusSmall': 'border-radius-small',
+    'tableBackground': 'table-bg',
+    'tableBackgroundAccent': 'table-bg-accent',
+    'tableBackgroundHover': 'table-bg-hover',
+    'placeholderText': 'input-color-placeholder',
+    'inputBackground': 'input-bg',
+    'inputBorder': 'input-border',
+    'inputBorderRadius': 'input-border-radius',
+    'inputDisabledBackground': 'input-bg-disabled',
+    'navbarHeight': 'navbar-height',
+    'navbarBackground': 'navbar-default-bg',
+    'navbarText': 'navbar-default-color',
+    'navbarLinkColor': 'navbar-default-link-color',
+    'navbarLinkColorHover': 'navbar-default-link-hover-color',
+    'navbarLinkColorActive': 'navbar-default-link-active-color',
+    'navbarLinkBackgroundHover': 'navbar-default-link-hover-bg',
+    'navbarLinkBackgroundActive': 'navbar-default-link-active-bg',
+    'dropdownBackground': 'dropdown-bg',
+    'dropdownBorder': 'dropdown-border',
+    'dropdownLinkColor': 'dropdown-link-color',
+    'dropdownLinkColorHover': 'dropdown-link-hover-color',
+    'dropdownLinkBackgroundHover': 'dropdown-link-hover-bg',
+    'paddingLarge': ['padding-large-vertical' 'padding-large-horizontal'],
+    'paddingSmall': ['padding-small-vertical' 'padding-small-horizontal'],
+    'paddingMini': ['padding-xs-vertical' 'padding-xs-horizontal'],
 }
 
 removed_less = [
-    '@yellow'
-    '@pink'
-    '@purple'
-    '@iconSpritePath'
-    '@iconWhiteSpritePath'
-    '@gridColumnWidth'
-    '@gridColumnWidth1200'
-    '@gridGutterWidth1200'
-    '@gridColumnWidth768'
-    '@gridGutterWidth768'
-    '@altFontFamily'
-    '@fontSizeMini'
-    '@heroUnitBackground'
-    '@heroUnitHeadingColor'
-    '@heroUnitLeadColor'
-    '@tableBorder'
-    '@formActionsBackground'
-    '@btnPrimaryBackground'
-    '@btnPrimaryBackgroundHighlight'
-    '@warningText'
-    '@warningBackground'
-    '@errorText'
-    '@errorBackground'
-    '@successText'
-    '@successBackground'
-    '@infoText'
-    '@infoBackground'
-    '@navbarBackgroundHighlight'
-    '@navbarBrandColor'
-    '@navbarSearchBackground'
-    '@navbarSearchBackgroundFocus'
-    '@navbarSearchBorder'
-    '@navbarSearchPlaceholderColor'
-    '@navbarCollapseWidth'
-    '@navbarCollapseDesktopWidth'
+    'yellow',
+    'pink',
+    'purple',
+    'iconSpritePath',
+    'iconWhiteSpritePath',
+    'gridColumnWidth',
+    'gridColumnWidth1200',
+    'gridGutterWidth1200',
+    'gridColumnWidth768',
+    'gridGutterWidth768',
+    'altFontFamily',
+    'fontSizeMini',
+    'heroUnitBackground',
+    'heroUnitHeadingColor',
+    'heroUnitLeadColor',
+    'tableBorder',
+    'formActionsBackground',
+    'btnPrimaryBackground',
+    'btnPrimaryBackgroundHighlight',
+    'warningText',
+    'warningBackground',
+    'errorText',
+    'errorBackground',
+    'successText',
+    'successBackground',
+    'infoText',
+    'infoBackground',
+    'navbarBackgroundHighlight',
+    'navbarBrandColor',
+    'navbarSearchBackground',
+    'navbarSearchBackgroundFocus',
+    'navbarSearchBorder',
+    'navbarSearchPlaceholderColor',
+    'navbarCollapseWidth',
+    'navbarCollapseDesktopWidth',
 ]
 
 def progress(percent):
@@ -248,33 +260,48 @@ def regex_warn_file(filename, regex, warn):
             warnings.append(' - [ ] %s line %d: %s' % (filename, (index + 1), warn.replace('*', '\\*')))
     return warnings
 
+process_less = process_less_css or process_less_variables
 replacements = 0
 warnings = []
-file_types = [
-    ('less', [(css_class, '.')]),
-    ('js', [(html_class, ' '), (selector_class, '.')]),
-    ('html', [(html_class, ' ')]),
-    ('py', [(html_class, ' '), (selector_class, '.')]),
-]
+file_types = []
+if process_css: file_types.append(('css', [(css_class, '.')]))
+if process_less: file_types.append(('less', [(css_class, '.')]))
+if process_js: file_types.append(('js', [(html_class, ' '), (selector_class, '.')]))
+if process_html: file_types.append(('html', [(html_class, ' ')]))
+if process_py: file_types.append(('py', [(html_class, ' '), (selector_class, '.')]))
+
 print 'Processing...'
 for type_index, (type_name, regex_groups) in enumerate(file_types):
     files = eval('%sfiles' % type_name)
     for index, file_name in enumerate(files):
+        # If this is not less or it is less that should be processed, process it here.
+        if type_name != 'less' and process_less_css:
+            # Perform quick replacements.
+            for find, replace in quick_replacements.items():
+                for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
+                    replacements += regex_sub_file(file_name, regex, r'\1' + replace + r'\3')
 
-        # Perform quick replacements.
-        for find, replace in quick_replacements.items():
-            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
-                replacements += regex_sub_file(file_name, regex, r'\1' + replace + r'\3')
+            # Perform split replacements.
+            for find, replace in replace_split_class.items():
+                for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
+                    replacements += regex_sub_file(file_name, regex, r'\1' + class_sep.join(replace) + r'\3')
 
-        # Perform split replacements.
-        for find, replace in replace_split_class.items():
-            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
-                replacements += regex_sub_file(file_name, regex, r'\1' + class_sep.join(replace) + r'\3')
+            # Check for lines that we can't automatically upgrade and warn about them.
+            for find, warn in warn_abouts.items():
+                for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
+                    warnings += regex_warn_file(file_name, regex, warn)
 
-        # Check for lines that we can't automatically upgrade and warn about them.
-        for find, warn in warn_abouts.items():
-            for regex, class_sep in [(re.compile(r.format(find)), rs[1]) for rs in regex_groups for r in rs[0]]:
-                warnings +=  regex_warn_file(file_name, regex, warn)
+        # If this is LESS, perform LESS specific replacements.
+        if type_name == 'less' and process_less_variables:
+            for find, replace in replace_less.items():
+                for regex in [re.compile(r.format(find)) for r in less_class]:
+                    if isinstance(replace, (tuple, list)):
+                        warnings += regex_warn_file(file_name, regex, '"@%s" should be replaced by ["@%s"]' % (find, '", "@'.join(replace)))
+                    else:
+                        replacements += regex_sub_file(file_name, regex, r'\1' + replace + r'\3')
+            for find in removed_less:
+                for regex in [re.compile(r.format(find)) for r in less_class]:
+                    warnings += regex_warn_file(file_name, regex, '"@%s" was removed from Bootstrap3.' % find)
 
         # Update progress bar with our current progress.
         fraction = 1./float(len(file_types))
