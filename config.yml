@@ -1,0 +1,28 @@
+process css: yes
+process js: yes
+process html: yes
+process py: yes
+process less css: yes
+process less variables: yes
+
+# Everything but the static/componets directory should be listed.  Algorithm is
+# recursive, no need to list sub directories if search is meant to be all 
+# inclusive.
+directories:
+    - ~/ipython/IPython/html/auth
+    - ~/ipython/IPython/html/base
+    - ~/ipython/IPython/html/nbconvert
+    - ~/ipython/IPython/html/notebook
+    - ~/ipython/IPython/html/services
+    - ~/ipython/IPython/html/templates
+    - ~/ipython/IPython/html/tests
+    - ~/ipython/IPython/html/tree
+    - ~/ipython/IPython/html/widgets
+    - ~/ipython/IPython/html/static/auth
+    - ~/ipython/IPython/html/static/base
+    - ~/ipython/IPython/html/static/custom
+    - ~/ipython/IPython/html/static/dateformat
+    - ~/ipython/IPython/html/static/notebook
+    - ~/ipython/IPython/html/static/services
+    - ~/ipython/IPython/html/static/tree
+    - ~/ipython/IPython/html/static/widgets

@@ -18,6 +18,30 @@ replacements to migrate your codebase to Bootstrap 3.x.  It will create a
 `warnings.md` file in the cwd with all of the line numbers that you will need 
 to update by hand along with *helpful* warning messages.
 
+## Quickstart
+
+- Configure `config.yml` (or a copy of it) to point to your project(s) directories.  The 
+directories defined here get recursively traversed.  *Currently there is no way
+to blacklist directories, this only behaves like a whitelist.*  
+- Run `python migrate.py config.yml bootstrap2to3.json run` to upgrade the 
+directories (optionally replace `config.yml` with the name of your config file).  
+
+### Advanced usage
+
+This tool supports two commands, `run` and `dump`.  `run` executes a migration
+file on the contents of a directory.  `dump` creates a template migration file
+for a directory.
+
+You can also use this tool as a general python/web refactoring tool.  To export
+the list of CSS and LESS variables used by your program, run 
+`python migrate.py config.yml output.json dump`.  This will create/overwrite
+`output.json` with dictionaries that you can edit by hand.  You can change 
+`output.json` to any file name you want.
+
+After editing the outputed file with your refactoring data, you can refactor 
+your program by running `python migrate.py config.yml output.json run` 
+(you'll need to replace `output.json` with the name of the outputed file).
+
 ## Algorithm
 This program attempts to make the replacements suggested at http://getbootstrap.com/migration/ .  It also attempts to warn for the removed CSS classes.
 
